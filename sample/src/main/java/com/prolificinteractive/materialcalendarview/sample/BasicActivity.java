@@ -1,5 +1,7 @@
 package com.prolificinteractive.materialcalendarview.sample;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,9 +46,39 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         textView.setText(getSelectedDatesString());
     }
 
+    public String [] process_date(CalendarDay date){
+        String year=date.getYear()+"";
+        String month=(date.getMonth()+1)+"";
+        String day=date.getDay()+"";
+
+        if(month.length()==1){
+            month="0"+month;
+        }
+        if(day.length()==1){
+            day="0"+day;
+        }
+
+        return new String[]{"dkcal_mdays_"+year+month+day};
+    }
+
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @Nullable CalendarDay date, boolean selected) {
-        textView.setText(getSelectedDatesString());
+        String [] whereArgs=process_date(date);
+        try{
+        SQLiteDatabase db = SQLiteDatabase.openDatabase("/storage/emulated/0/Android/data/nutstore.android/cache/objectcache/1/calendar.db", null, 0);
+        Cursor cursor = db.query("item_table", new String[]{"it_content", "it_unique_id"}, "it_unique_id like ?", whereArgs, null, null, null);
+
+        cursor.moveToFirst();
+        String ss= cursor.getString(cursor.getColumnIndex("it_content"));
+        if (ss.length()==0){
+            textView.setText("（该日你没有记录）");
+        }else {
+            textView.setText(ss);
+        }
+        }catch (Exception e){
+            textView.setText("查询不到这条记录");
+        }
+
     }
 
     @Override
