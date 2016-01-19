@@ -46,7 +46,7 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         widget.setOnMonthChangedListener(this);
 
 //        初始化设置
-        onDateSelected(widget,widget.getCurrentDate(),true);
+        onDateSelected(widget, widget.getSelectedDate(), true);
     }
 
     public String [] process_date(CalendarDay date){
