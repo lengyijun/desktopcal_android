@@ -1,9 +1,11 @@
 .gradle
+.idea/
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
 /build
+
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
