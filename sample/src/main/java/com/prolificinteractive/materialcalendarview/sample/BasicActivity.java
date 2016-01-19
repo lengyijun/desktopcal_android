@@ -32,6 +32,8 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
 
     @Bind(R.id.textView)
     TextView textView;
+    SQLiteDatabase db;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +41,12 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         setContentView(R.layout.activity_basic);
         ButterKnife.bind(this);
 
+        widget.setSelectedDate(Calendar.getInstance());
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
 
-        //Setup initial text
-        textView.setText(getSelectedDatesString());
+//        初始化设置
+        onDateSelected(widget,widget.getCurrentDate(),true);
     }
 
     public String [] process_date(CalendarDay date){
@@ -62,11 +65,21 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+        db.close();
+    }
+
+    @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @Nullable CalendarDay date, boolean selected) {
+//        设置标题
+        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
+
         String [] whereArgs=process_date(date);
         try{
-        SQLiteDatabase db = SQLiteDatabase.openDatabase("/storage/emulated/0/Android/data/nutstore.android/cache/objectcache/1/calendar.db", null, 0);
-        Cursor cursor = db.query("item_table", new String[]{"it_content", "it_unique_id"}, "it_unique_id like ?", whereArgs, null, null, null);
+        db = SQLiteDatabase.openDatabase("/storage/emulated/0/Android/data/nutstore.android/cache/objectcache/1/calendar.db", null, 0);
+        cursor = db.query("item_table", new String[]{"it_content", "it_unique_id"}, "it_unique_id like ?", whereArgs, null, null, null);
 
         cursor.moveToFirst();
         String ss= cursor.getString(cursor.getColumnIndex("it_content"));
@@ -78,7 +91,6 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         }catch (Exception e){
             textView.setText("查询不到这条记录");
         }
-
     }
 
     @Override
