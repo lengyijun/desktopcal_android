@@ -65,13 +65,16 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
          path_cursor.moveToFirst();
          String aboslute_path=path_cursor.getString(path_cursor.getColumnIndex("st_val"));
          try {
-             db = SQLiteDatabase.openDatabase(aboslute_path,null, 0);
-             db.close();
+             if(aboslute_path.length()==0){
+                 throw new Exception();
+             }
+             SQLiteDatabase db_temp = SQLiteDatabase.openDatabase(aboslute_path,null, 0);
+             db_temp.close();
          }catch (Exception e){
               aboslute_path=find_path_from_whole_phone();
               ContentValues values=new ContentValues();
               values.put("st_val",aboslute_path);
-              path_db.update("main_tb",values,"st_name like ?",new String[]{"db_path"});
+              path_db.update("main_tb", values, "st_name like ?", new String[]{"db_path"});
          }
          path_cursor.close();
          path_db.close();
