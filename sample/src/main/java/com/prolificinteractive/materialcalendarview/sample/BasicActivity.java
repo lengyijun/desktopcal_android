@@ -1,9 +1,11 @@
 package com.prolificinteractive.materialcalendarview.sample;
 
+import android.app.DialogFragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,6 +14,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Shows off the most basic usage
  */
-public class BasicActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener {
+public class BasicActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener,update_db_dialogfragment.NoticeDialogListener {
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     @Bind(R.id.calendarView)
@@ -47,12 +51,32 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
     DBopenhelper dBopenhelper;
     SQLiteDatabase db;
     Cursor cursor;
+    Button update_button;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic);
         ButterKnife.bind(this);
+        sharedPreferences=getSharedPreferences("data_record",MODE_ENABLE_WRITE_AHEAD_LOGGING);
+        editor=sharedPreferences.edit();
+
+        update_button= (Button) findViewById(R.id.button);
+        update_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putString("record",textView.getText().toString());
+                editor.putString("date",getSupportActionBar().getTitle().toString());
+//                editor.putString("date",FORMATTER.format(widget.getSelectedDate().getDate()));
+                editor.commit();
+
+                update_db_dialogfragment dialog=new update_db_dialogfragment();
+                dialog.show(getFragmentManager(),"hello");
+            }
+        });
 
         widget.setSelectedDate(Calendar.getInstance());
         widget.setOnDateChangedListener(this);
@@ -147,6 +171,7 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         }
 
     }
+
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @Nullable CalendarDay date, boolean selected) {
 //        设置标题
@@ -160,4 +185,12 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
     }
 
+    @Override
+    public void onDialogPositiveClick(String ss) {
+        String[] whereArgs=process_date(widget.getSelectedDate());
+        ContentValues values=new ContentValues();
+        values.put("it_content", ss);
+        values.put("it_unique_id", whereArgs[0]);
+        db.replace("item_table",null,values);
+    }
 }
