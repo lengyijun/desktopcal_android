@@ -1,14 +1,19 @@
 package com.prolificinteractive.materialcalendarview.sample;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -34,13 +39,12 @@ import butterknife.ButterKnife;
 public class BasicActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener {
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
-    DBopenhelper dBopenhelper;
-
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
 
     @Bind(R.id.textView)
     TextView textView;
+    DBopenhelper dBopenhelper;
     SQLiteDatabase db;
     Cursor cursor;
 
@@ -61,6 +65,7 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
     public String find_path_from_db() {
          dBopenhelper=new DBopenhelper(this,"main_tb",null,1);
          SQLiteDatabase path_db=dBopenhelper.getReadableDatabase();
+//        先尝试从数据库中读取路径
          Cursor path_cursor=path_db.query("main_tb",null,"st_name like ?",new String[]{"db_path"},null,null,null);
          path_cursor.moveToFirst();
          String aboslute_path=path_cursor.getString(path_cursor.getColumnIndex("st_val"));
@@ -68,12 +73,17 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
              if(aboslute_path.length()==0){
                  throw new Exception();
              }
-             SQLiteDatabase db_temp = SQLiteDatabase.openDatabase(aboslute_path,null, 0);
+             SQLiteDatabase db_temp = SQLiteDatabase.openDatabase(aboslute_path, null, 0);
              db_temp.close();
          }catch (Exception e){
               aboslute_path=find_path_from_whole_phone();
+              if(aboslute_path.length()==0){
+                 Toast.makeText(this,"对不起，找不到数据库文件，请手动同步后再尝试",Toast.LENGTH_LONG).show();
+                 return null;
+             }
               ContentValues values=new ContentValues();
-              values.put("st_val",aboslute_path);
+              values.put("st_val", aboslute_path);
+//             把新得到的数据放到数据库中
               path_db.update("main_tb", values, "st_name like ?", new String[]{"db_path"});
          }
          path_cursor.close();
@@ -119,27 +129,29 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         db.close();
     }
 
+    public String get_record_of_day(CalendarDay date){
+        String [] whereArgs=process_date(date);
+        try{
+            db = SQLiteDatabase.openDatabase(find_path_from_db(), null, 0);
+            cursor = db.query("item_table", new String[]{"it_content", "it_unique_id"}, "it_unique_id like ?", whereArgs, null, null, null);
+
+            cursor.moveToFirst();
+            String ss= cursor.getString(cursor.getColumnIndex("it_content"));
+            if (ss.length()==0){
+                return ("（该日你没有记录）");
+            }else {
+                return (ss);
+            }
+        }catch (Exception e){
+            return ("(查询不到这条记录)");
+        }
+
+    }
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @Nullable CalendarDay date, boolean selected) {
 //        设置标题
         getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
-
-        String [] whereArgs=process_date(date);
-        try{
-        db = SQLiteDatabase.openDatabase(find_path_from_db(), null, 0);
-//            db = SQLiteDatabase.openDatabase("/storage/emulated/0/Android/data/nutstore.android/cache/objectcache/1/calendar.db", null, 0);
-        cursor = db.query("item_table", new String[]{"it_content", "it_unique_id"}, "it_unique_id like ?", whereArgs, null, null, null);
-
-        cursor.moveToFirst();
-        String ss= cursor.getString(cursor.getColumnIndex("it_content"));
-        if (ss.length()==0){
-            textView.setText("（该日你没有记录）");
-        }else {
-            textView.setText(ss);
-        }
-        }catch (Exception e){
-            textView.setText("(查询不到这条记录)");
-        }
+        textView.setText(get_record_of_day(date));
     }
 
     @Override
@@ -148,11 +160,4 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
     }
 
-    private String getSelectedDatesString() {
-        CalendarDay date = widget.getSelectedDate();
-        if (date == null) {
-            return "No Selection";
-        }
-        return FORMATTER.format(date.getDate());
-    }
 }
