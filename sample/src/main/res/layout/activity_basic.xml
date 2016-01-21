@@ -21,16 +21,17 @@
         android:id="@+id/textView"
         android:layout_margin="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="90sp"
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="15dip"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_gravity="bottom"
+        android:textSize="10dp"
         android:id="@+id/button"
         android:text="修改"/>
 
