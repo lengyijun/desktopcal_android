@@ -8,20 +8,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.prolificinteractive.materialcalendarview.sample.R;
 
 /**
  * Created by steven on 2016/1/20.
  */
 public class update_db_dialogfragment extends DialogFragment {
-    String date_ss;
-    String record_of_date;
     NoticeDialogListener mListener;
     TextView tv;
     EditText et;
@@ -57,6 +53,7 @@ public class update_db_dialogfragment extends DialogFragment {
                         listener.onDialogPositiveClick(ss);
                     }
                 });
+        builder.setNegativeButton("取消",null);
         return builder.create();
     }
 
