@@ -1,0 +1,87 @@
+[
+    {
+        "outputFile": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\debug\\values\\values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 61,
+                    "endOffset": 112
+                },
+                "from": {
+                    "file": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\values\\colors.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 61,
+                        "endColumn": 61,
+                        "endOffset": 118
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 117,
+                    "endColumn": 62,
+                    "endOffset": 175
+                },
+                "from": {
+                    "file": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\values\\colors.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 124,
+                        "endColumn": 62,
+                        "endOffset": 182
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 180,
+                    "endLine": 10,
+                    "endColumn": 12,
+                    "endOffset": 466
+                },
+                "from": {
+                    "file": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\values\\styles.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 192,
+                        "endLine": 12,
+                        "endColumn": 12,
+                        "endOffset": 484
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 471,
+                    "endLine": 13,
+                    "endColumn": 12,
+                    "endOffset": 626
+                },
+                "from": {
+                    "file": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\values\\styles.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 525,
+                        "endLine": 17,
+                        "endColumn": 12,
+                        "endOffset": 682
+                    }
+                }
+            }
+        ]
+    }
+]

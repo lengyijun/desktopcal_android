@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\debug\\layout\\fragment_time.xml",
+        "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\layout\\fragment_time.xml"
+    },
+    {
+        "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\debug\\layout\\custom_tab.xml",
+        "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\layout\\custom_tab.xml"
+    },
+    {
+        "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\debug\\layout\\fragment_date.xml",
+        "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\layout\\fragment_date.xml"
+    },
+    {
+        "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\debug\\layout\\slide_date_time_picker.xml",
+        "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\src\\main\\res\\layout\\slide_date_time_picker.xml"
+    }
+]
