@@ -29,4 +29,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile project(':slideDateTimePicker')
     compile files('C:/Users/steven/AndroidStudioProjects/rewrite_desktopcal/commons-io-2.4.jar')
+    compile 'com.zhy:okhttputils:2.2.1'
+    compile files('lib/commons-io-2.4.jar')
+    compile 'com.squareup.okhttp:okhttp:2.6.0'
 }

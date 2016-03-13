@@ -27,10 +27,17 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.squareup.okhttp.MultipartBuilder;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+import com.zhy.http.okhttp.request.RequestCall;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.output.TaggedOutputStream;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -39,9 +46,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Shows off the most basic usage
@@ -50,13 +61,10 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         OnMonthChangedListener,update_db_dialogfragment.NoticeDialogListener,OnNavigationItemSelectedListener,Choose_db.Choose_db_interface{
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
-    @Bind(R.id.calendarView)
-    MaterialCalendarView widget;
+    @Bind(R.id.calendarView) MaterialCalendarView widget;
+    @Bind(R.id.textView) TextView textView;
 
-    @Bind(R.id.textView)
-    TextView textView;
-
-    DBopenhelper dBopenhelper;
+//    DBopenhelper dBopenhelper;
     SQLiteDatabase db;
     SQLiteDatabase path_db;
     Cursor cursor;
@@ -89,47 +97,70 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         });
 //        初始化设置
         onDateSelected(widget, widget.getSelectedDate(), true);
+        getDataFromRemote();
     }
 
-    public String find_path_from_db() {
-         dBopenhelper=new DBopenhelper(this,"main_tb",null,1);
-          path_db=dBopenhelper.getReadableDatabase();
-//        先尝试从数据库中读取路径
-         Cursor path_cursor=path_db.query("main_tb",null,"st_name like ?",new String[]{"db_path"},null,null,null);
-         path_cursor.moveToFirst();
-         String aboslute_path=path_cursor.getString(path_cursor.getColumnIndex("st_val"));
-         try {
-             if(aboslute_path.length()==0){
-                 throw new Exception();
-             }
-             SQLiteDatabase db_temp = SQLiteDatabase.openDatabase(aboslute_path, null, 0);
-             db_temp.close();
-         }catch (Exception e){
-              aboslute_path=find_path_from_whole_phone();
-              if(aboslute_path.length()==0){
-                 Toast.makeText(this,"对不起，找不到数据库文件，请手动同步后再尝试",Toast.LENGTH_LONG).show();
-                 return null;
-             }
-             write_path_db(aboslute_path);
-         }
-         path_cursor.close();
-         return aboslute_path;
-    }
+    private void getDataFromRemote() {
+        OkHttpUtils.post()
+                .url("http://account.desktopcal.com/ajax_login.php")
+                .addParams("u_name","qb20110427@163.com")
+                .addParams("u_password", "demure")
+                .addParams("lang", "chs")
+                .addParams("u_keepalive","checked")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        System.out.print("fail");
+                        Toast.makeText(getApplicationContext(),"login fail",Toast.LENGTH_SHORT).show();
+                    }
 
-    public String find_path_from_whole_phone(){
-        String ss="";
-        Collection<File> files= FileUtils.listFiles(Environment.getExternalStorageDirectory(),
-                new RegexFileFilter("calendar.db"),
-                TrueFileFilter.TRUE
-        );
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        Toast.makeText(getApplicationContext(),"login success", Toast.LENGTH_SHORT).show();;
 
-        for(File f:files){
-            if(f.getName().equals("calendar.db")){
-                ss=f.getAbsolutePath();
-                break;
-            }
-        }
-        return ss;
+                        OkHttpUtils.post()
+                                .url("http://sync.desktopcal.com/ajax_sync.php")
+                                .addParams("doaction","queryindex")
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e) {
+
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Toast.makeText(getApplicationContext(), "query success", Toast.LENGTH_SHORT).show();
+                                        try {
+                                            JSONObject jsonobj = new JSONObject(response);
+                                            JSONObject vdata = jsonobj.getJSONObject("vdata");
+                                            JSONObject list=vdata.getJSONObject("list");
+                                            Iterator<String> it=list.keys();
+                                            ArrayList<String> update_data=new ArrayList<String>();
+
+                                            while (it.hasNext()){
+                                                String key=it.next();
+                                                JSONObject s=list.getJSONObject(key);
+                                                update_data.add(s.getString("cd_unique_id"));
+                                            }
+                                            System.out.println(update_data);
+
+                                            MultipartBuilder builder=new MultipartBuilder().type(MultipartBuilder.FORM)
+                                                    .addFormDataPart( "doaction","downloaditems")
+                                                    .addFormDataPart("doview", "")
+                                                    .addFormDataPart("jid[]", "dkcal_mdays_20160116");
+                                            OkHttpUtils.post()
+                                                    .url("http://sync.desktopcal.com/ajax_sync.php")
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                    }
+                });
     }
 
     public String [] process_date(CalendarDay date){
@@ -158,7 +189,8 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
     public String get_record_of_day(CalendarDay date){
         String [] whereArgs=process_date(date);
         try{
-            db = SQLiteDatabase.openDatabase(find_path_from_db(), null, 0);
+//            todo
+//            db = SQLiteDatabase.openDatabase(find_path_from_db(), null, 0);
             cursor = db.query("item_table", new String[]{"it_content", "it_unique_id"}, "it_unique_id like ?", whereArgs, null, null, null);
 
             cursor.moveToFirst();
@@ -205,6 +237,7 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         return true;
     }
 
+//    侧边框的pressback
     @Override
     public void onBackPressed() {
         DrawerLayout drawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -252,7 +285,9 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
 
     @Override
     public String current_db_location() {
-        return find_path_from_db();
+//        todo
+//        return find_path_from_db();
+        return null;
     }
 
     @Override
@@ -304,7 +339,7 @@ public class BasicActivity extends AppCompatActivity implements OnDateSelectedLi
         }
     }
 
-   private SlideDateTimeListener listener=new SlideDateTimeListener() {
+    private SlideDateTimeListener listener=new SlideDateTimeListener() {
        @Override
        public void onDateTimeSet(Date date) {
           widget.setSelectedDate(date);

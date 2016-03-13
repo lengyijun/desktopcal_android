@@ -1,5 +1,9 @@
 [
     {
+        "merged": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\selection_divider.9.png",
+        "source": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\drawable-mdpi-v4\\selection_divider.9.png"
+    },
+    {
         "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\selection_divider.9.png",
         "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\drawable-mdpi-v4\\selection_divider.9.png"
     }

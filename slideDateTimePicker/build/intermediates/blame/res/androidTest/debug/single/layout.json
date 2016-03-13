@@ -4,8 +4,20 @@
         "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\fragment_date.xml"
     },
     {
+        "merged": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\slide_date_time_picker.xml",
+        "source": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\slide_date_time_picker.xml"
+    },
+    {
         "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\fragment_time.xml",
         "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\fragment_time.xml"
+    },
+    {
+        "merged": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\fragment_date.xml",
+        "source": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\fragment_date.xml"
+    },
+    {
+        "merged": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\custom_tab.xml",
+        "source": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\custom_tab.xml"
     },
     {
         "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\slide_date_time_picker.xml",
@@ -14,5 +26,9 @@
     {
         "merged": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\custom_tab.xml",
         "source": "C:\\Users\\steven\\AndroidStudioProjects\\rewrite_desktopcal\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\custom_tab.xml"
+    },
+    {
+        "merged": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\fragment_time.xml",
+        "source": "F:\\AndroidStudioProjects\\Desktopcal_app\\slideDateTimePicker\\build\\intermediates\\bundles\\debug\\res\\layout\\fragment_time.xml"
     }
 ]
